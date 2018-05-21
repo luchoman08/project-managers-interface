@@ -1,5 +1,5 @@
-export * from "./SimpleDeveloper";
-export * from "./SimpleProject";
-export * from "./SimpleSprint";
-export * from "./SimpleUserStory";
+export * from "./Developer";
+export * from "./Project";
+export * from "./Sprint";
+export * from "./UserStory";
 

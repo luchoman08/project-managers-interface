@@ -5,30 +5,30 @@ import {
     TaigaProject
 } from "./models";
 import {
-    SimpleDeveloper,
-    SimpleUserStory,
-    SimpleProject,
-    SimpleSprint
-} from "../models/";
+    Developer,
+    UserStory,
+    Project,
+    Sprint
+} from "../models/index";
 
-export function taigaProjectToSimpleProject(
-    taigaProject: TaigaProject): SimpleProject {
-        const simpleProject: SimpleProject = new SimpleProject();
-        simpleProject.id = taigaProject.id;
-        simpleProject.description = taigaProject.description;
-        simpleProject.name = taigaProject.name;
-        simpleProject.created_date = taigaProject.created_date;
-        return simpleProject;
+export function taigaProjectToProject(
+    taigaProject: TaigaProject): Project {
+        const project: Project = new Project();
+        project.id = taigaProject.id;
+        project.description = taigaProject.description;
+        project.name = taigaProject.name;
+        project.created_date = taigaProject.created_date;
+        return project;
     }
 
-export function taigaProjectsToSimpleProjects(
-    taigaMilestones: TaigaProject[]): SimpleProject[] {
-        return taigaMilestones.map(taigaProjectToSimpleProject);
+export function taigaProjectsToProjects(
+    taigaMilestones: TaigaProject[]): Project[] {
+        return taigaMilestones.map(taigaProjectToProject);
     }
 
-export function taigaMembershipToSimpleDeveloper(
-    taigaMembership: TaigaMembership): SimpleDeveloper {
-        const simpleDeveloper: SimpleDeveloper = new SimpleDeveloper();
+export function taigaMembershipToDeveloper(
+    taigaMembership: TaigaMembership): Developer {
+        const simpleDeveloper: Developer = new Developer();
         simpleDeveloper.id = taigaMembership.id;
         simpleDeveloper.color = taigaMembership.color;
         simpleDeveloper.full_name = taigaMembership.full_name;
@@ -36,37 +36,38 @@ export function taigaMembershipToSimpleDeveloper(
         return simpleDeveloper;
     }
 
-export function taigaMembershipsToSimpleDevelopers(
-    taigaMemberships: TaigaMembership[]): SimpleDeveloper[] {
-        return taigaMemberships.map(taigaMembershipToSimpleDeveloper);
+export function taigaMembershipsToDevelopers(
+    taigaMemberships: TaigaMembership[]): Developer[] {
+        return taigaMemberships.map(taigaMembershipToDeveloper);
     }
 
-export function taigaStoryToSimpleUserStory(
-    taigaUserStory: TaigaUserStory): SimpleUserStory {
-    const simpleUserStory: SimpleUserStory = new SimpleUserStory();
-    simpleUserStory.id = taigaUserStory.id;
-    simpleUserStory.subject = taigaUserStory.subject;
-    return simpleUserStory;
+export function taigaStoryToUserStory(
+    taigaUserStory: TaigaUserStory): UserStory {
+    const userStory: UserStory = new UserStory();
+    userStory.id = taigaUserStory.id;
+    userStory.subject = taigaUserStory.subject;
+    userStory.total_points = taigaUserStory.total_points;
+    return userStory;
 
 }
 
-export function taigaStoriesToSimpleUserStories(
-    taigaUserStories: TaigaUserStory[]): SimpleUserStory[] {
-        return taigaUserStories.map(taigaStoryToSimpleUserStory);
+export function taigaStoriesToUserStories(
+    taigaUserStories: TaigaUserStory[]): UserStory[] {
+        return taigaUserStories.map(taigaStoryToUserStory);
     }
 
-    export function taigaMilestoneToSimpleSprint(
-        taigaMilestone: TaigaMilestone): SimpleSprint {
-            const sprint: SimpleSprint = new SimpleSprint();
+    export function taigaMilestoneToSprint(
+        taigaMilestone: TaigaMilestone): Sprint {
+            const sprint: Sprint = new Sprint();
             sprint.id = taigaMilestone.id;
             sprint.name = taigaMilestone.name;
-            sprint.user_stories = taigaStoriesToSimpleUserStories(taigaMilestone.user_stories);
+            sprint.user_stories = taigaStoriesToUserStories(taigaMilestone.user_stories);
             sprint.estimated_start = taigaMilestone.estimated_start;
             sprint.estimated_finish = taigaMilestone.estimated_finish;
             return sprint;
         }
 
-    export function taigaMilestonesToSimpleSprints(
-        taigaMilestones: TaigaMilestone[]): SimpleSprint[] {
-            return taigaMilestones.map(taigaMilestoneToSimpleSprint);
+    export function taigaMilestonesToSprints(
+        taigaMilestones: TaigaMilestone[]): Sprint[] {
+            return taigaMilestones.map(taigaMilestoneToSprint);
         }
