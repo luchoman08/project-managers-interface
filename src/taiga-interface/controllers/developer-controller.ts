@@ -13,11 +13,11 @@ const base_url: String = "https://api.taiga.io/api/v1";
 
 function getDeveloper (id: number, callback: Function) {
     let taigaMembership: TaigaMembership = new TaigaMembership();
-    let project: Developer = new Developer();
+    let developer: Developer = new Developer();
     request(base_url + "/memberships/" + id, function (error, response, body) {
         taigaMembership = JSON.parse(body);
         project  = taigaInterface.taigaMembershipToDeveloper(taigaMembership);
-        callback(project);
+        callback(developer);
         });
     }
 

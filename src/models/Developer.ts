@@ -4,5 +4,8 @@ export class Developer {
     role_name: string;
     available_hours_per_week: number;
     color: string;
-    constructor() {}
+    constructor() {
+	this.available_hours_per_week=null;
+	}
+
 }

@@ -4,7 +4,6 @@ export const router = express.Router();
 import * as taigaController from "../taiga-interface/controllers/taiga-router";
 router.use(function(req, res, next) {
     const project_manager = req.query.project_manager;
-    console.log(String(project_manager) === "taiga");
     switch (String(project_manager)) {
         case "taiga": {
             router.use(taigaController.router);
