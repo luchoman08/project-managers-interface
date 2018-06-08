@@ -46,6 +46,7 @@ export function taigaStoryToUserStory(
     const userStory: UserStory = new UserStory();
     userStory.id = taigaUserStory.id;
     userStory.subject = taigaUserStory.subject;
+    userStory.assigned_to = taigaUserStory.assigned_to;
     userStory.total_points = taigaUserStory.total_points;
     return userStory;
 
