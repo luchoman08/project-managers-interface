@@ -11,7 +11,7 @@ import { taigaStoryToUserStory } from '../lib';
 export const router = express.Router();
 const base_url: String = "https://api.taiga.io/api/v1";
 var bearerToken: string;
-function getTaigaUserStory(id: number|string) {
+function getTaigaUserStory(id: number|string): TaigaUserStory {
     return rp(base_url + "/userstories/" + id).then(
         (body:string) => {
             return JSON.parse(body) as TaigaUserStory;
@@ -57,6 +57,7 @@ function setUserStory(userStory: UserStory): Promise<UserStory> {
         );
 }
 
+
 function getProjectuserStories(project_id: String, callback: Function) {
     let taigaUserStories: TaigaUserStory[] = new Array<TaigaUserStory>();
     let userStories: UserStory[] = new Array<UserStory>();
@@ -69,7 +70,7 @@ function getProjectuserStories(project_id: String, callback: Function) {
         userStories  = taigaInterface.taigaStoriesToUserStories(taigaUserStories);
         callback(userStories);
         });
-    }
+}
 
 router.use(
     function (req: Request, res: Response, next) {

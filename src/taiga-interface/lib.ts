@@ -29,7 +29,7 @@ export function taigaProjectsToProjects(
 export function taigaMembershipToDeveloper(
     taigaMembership: TaigaMembership): Developer {
         const simpleDeveloper: Developer = new Developer();
-        simpleDeveloper.id = taigaMembership.id;
+        simpleDeveloper.id = taigaMembership.user;
         simpleDeveloper.color = taigaMembership.color;
         simpleDeveloper.full_name = taigaMembership.full_name;
         simpleDeveloper.role_name = taigaMembership.role_name;
