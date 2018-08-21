@@ -1,12 +1,14 @@
 
 import { Request, Response, NextFunction } from "express";
 import request from "request";
+import rp from 'request-promise';
 import * as taigaInterface from "../lib";
-import  { TaigaMembership }  from "../models/";
+import  { TaigaMembership, TaigaProject }  from "../models/";
 import { taigaMembershipsToDevelopers, taigaMembershipToDeveloper } from "../lib";
 import { ServerResponse } from "http";
 import express from "express";
 import { Developer } from "../../models/Developer";
+import * as projectController from './project-controller';
 export const router = express.Router();
 
 const base_url: String = "https://api.taiga.io/api/v1";
@@ -14,9 +16,10 @@ const base_url: String = "https://api.taiga.io/api/v1";
 function getDeveloper (id: number, callback: Function) {
     let taigaMembership: TaigaMembership = new TaigaMembership();
     let developer: Developer = new Developer();
+
     request(base_url + "/memberships/" + id, function (error, response, body) {
         taigaMembership = JSON.parse(body);
-        project  = taigaInterface.taigaMembershipToDeveloper(taigaMembership);
+        developer  = taigaInterface.taigaMembershipToDeveloper(taigaMembership);
         callback(developer);
         });
     }
@@ -31,8 +34,20 @@ function getProjectDevelopers(project_id: String, callback: Function) {
         },
         function (error, response, body) {
             taigaMemberships = JSON.parse(body);
-            developers  = taigaInterface.taigaMembershipsToDevelopers(taigaMemberships);
-            callback(developers);
+            projectController.getTaigaProject(<string>project_id)
+            .then(
+                (taigaProject: TaigaProject) => {
+                    console.log('llamado a get project developers')
+                    developers  = taigaInterface.taigaMembershipsToDevelopers(taigaMemberships, taigaProject);
+                    callback(developers);
+                }
+            )
+            .catch(
+                (error: any) => {
+                    callback(error);
+                }
+            )
+           
         });
     }
 

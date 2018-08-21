@@ -1,5 +1,5 @@
-export class TaigaPoint {
-    id: string;
+export class  TaigaPoint {
+    id: number;
     value: number;
     constructor () {}
   }

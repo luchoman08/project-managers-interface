@@ -1,23 +1,34 @@
 
 import { Request, Response, NextFunction } from "express";
 import request from "request";
+import rp from 'request-promise';
+
 import * as taigaInterface from "../lib";
 import  { TaigaProject }  from "../models/";
 import { Project } from "../../models/";
-import { taigaProjectsToProjects } from "../lib";
-import { ServerResponse } from "http";
+
 import express from "express";
 export const router = express.Router();
 
 const base_url: String = "https://api.taiga.io/api/v1";
 
-function getProject (id: number, callback: Function) {
+
+export function getTaigaProject (id: number | string): Promise<TaigaProject> {
+    let taigaProject: TaigaProject = new TaigaProject();
+    return rp(base_url + "/projects/" + id)
+    .then( (body: HTMLBodyElement) => {
+        taigaProject = JSON.parse(String(body));
+        return taigaProject;
+        });
+    }
+export function getProject (id: number | string): Promise<Project> {
     let taigaProject: TaigaProject = new TaigaProject();
     let project: Project = new Project();
-    request(base_url + "/projects/" + id, function (error, response, body) {
-        taigaProject = JSON.parse(body);
+    return rp(base_url + "/projects/" + id)
+    .then( (body: HTMLBodyElement) => {
+        taigaProject = JSON.parse(String(body));
         project  = taigaInterface.taigaProjectToProject(taigaProject);
-        callback(project);
+        return project;
         });
     }
 
@@ -73,11 +84,12 @@ router.use (
     }
 });
 router.get("/:id",
-    function (req: Request, res: Response, next) {
-        getProject (req.params.id,
-            function (projects: Project[]) {
-                res.json(projects);
+    function (req: Request, res: Response) {
+        getProject (req.params.id)
+        .then(
+            (project: Project) => {
+                res.json(project);
             }
-        );
+        )
     }
 );
