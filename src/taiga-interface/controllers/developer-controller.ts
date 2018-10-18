@@ -1,14 +1,13 @@
 
 import { Request, Response, NextFunction } from "express";
 import request from "request";
-import rp from 'request-promise';
+import rp from "request-promise";
 import * as taigaInterface from "../lib";
 import  { TaigaMembership, TaigaProject }  from "../models/";
-import { taigaMembershipsToDevelopers, taigaMembershipToDeveloper } from "../lib";
-import { ServerResponse } from "http";
+
 import express from "express";
 import { Developer } from "../../models/Developer";
-import * as projectController from './project-controller';
+import * as projectController from "./project-controller";
 export const router = express.Router();
 
 const base_url: String = "https://api.taiga.io/api/v1";
@@ -37,7 +36,7 @@ function getProjectDevelopers(project_id: String, callback: Function) {
             projectController.getTaigaProject(<string>project_id)
             .then(
                 (taigaProject: TaigaProject) => {
-                    console.log('llamado a get project developers')
+                    console.log("llamado a get project developers");
                     developers  = taigaInterface.taigaMembershipsToDevelopers(taigaMemberships, taigaProject);
                     callback(developers);
                 }
@@ -46,8 +45,8 @@ function getProjectDevelopers(project_id: String, callback: Function) {
                 (error: any) => {
                     callback(error);
                 }
-            )
-           
+            );
+
         });
     }
 

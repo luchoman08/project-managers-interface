@@ -78,7 +78,7 @@ export function taigaMilestoneToSprint(
     const sprint: Sprint = new Sprint();
     sprint.id = taigaMilestone.id;
     sprint.name = taigaMilestone.name;
-    sprint.user_stories = taigaMilestone.user_stories? taigaStoriesToUserStories(taigaMilestone.user_stories, project): new Array<UserStory>();
+    sprint.user_stories = taigaMilestone.user_stories ? taigaStoriesToUserStories(taigaMilestone.user_stories, project) : new Array<UserStory>();
     sprint.estimated_start = taigaMilestone.estimated_start;
     sprint.estimated_finish = taigaMilestone.estimated_finish;
     return sprint;

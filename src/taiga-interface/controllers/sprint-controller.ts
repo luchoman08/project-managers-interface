@@ -4,19 +4,20 @@ import * as taigaInterface from "../lib";
 import { TaigaMilestone, TaigaProject } from "../models/";
 import { Sprint, Project } from "../../models/";
 import express from "express";
-import rp from 'request-promise';
-import * as projectController from './project-controller';
+import rp from "request-promise";
+import * as projectController from "./project-controller";
 
 export const router = express.Router();
 const base_url: String = "https://api.taiga.io/api/v1";
 
-function getSprint(id: number, callback: Function) {
+async function getSprint(id: number, projectId: number|string): Promise<Sprint> {
     let taigaMilestone: TaigaMilestone = new TaigaMilestone();
     let sprint: Sprint = new Sprint();
-    request(base_url + "/milestones/" + id, function (error, response, body) {
+    const project = await projectController.getTaigaProject(projectId);
+    return rp(base_url + "/milestones/" + id, function (error, response, body) {
         taigaMilestone = JSON.parse(body);
-        sprint = taigaInterface.taigaMilestoneToSprint(taigaMilestone);
-        callback(sprint);
+        sprint = taigaInterface.taigaMilestoneToSprint(taigaMilestone, project);
+        return sprint;
     });
 }
 
@@ -55,8 +56,8 @@ function getProjectSprintsWithUserStoryPoints(project_id: String, callback: Func
                 (error: any) => {
                     callback( error);
                  }
-            )
-            
+            );
+
         }).catch(
             (error: any) => {
                callback( error);
@@ -66,13 +67,13 @@ router.use(
     function (req: Request, res: Response, next) {
         const projectid = req.query.project;
         const append_points = req.query.append_points;
-        console.log(append_points, ' append points from get project sprints')
+        console.log(append_points, " append points from get project sprints");
         if ( projectid ) {
             if ( append_points ) {
-                getProjectSprintsWithUserStoryPoints(projectid, 
+                getProjectSprintsWithUserStoryPoints(projectid,
                 function(sprints: Sprint[]) {
                     res.send(sprints);
-                })
+                });
             } else {
             getProjectSprints(projectid,
                 function (sprints: Sprint[]) {
@@ -85,11 +86,10 @@ router.use(
         }
     });
 router.get("/:id",
-    function (req: Request, res: Response, next) {
-        let sprint_id = req.params.id;
-        getSprint(sprint_id,
-            function (sprints: Sprint[]) {
-                res.json(sprints);
-            });
+    async function (req: Request, res: Response, next) {
+        const sprint_id = req.params.id;
+        const project_id = req.params.project_id;
+        const sprint = await getSprint(sprint_id, project_id);
+        return res.json(sprint);
     }
 );

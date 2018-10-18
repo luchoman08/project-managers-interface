@@ -14,11 +14,13 @@ WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 # install and cache app dependencies
-COPY package.json /usr/src/app/package.json
-RUN npm install -g 
+COPY  package.json /usr/src/app
+#RUN npm install -g 
 RUN npm install
-RUN chmod -R 755 node_modules
+<<<<<<< Updated upstream
 # add app
 COPY . /usr/src/app
+=======
+>>>>>>> Stashed changes
 
 

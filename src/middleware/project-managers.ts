@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
 import express from "express";
 export const router = express.Router();
-import * as taigaController from "../taiga-interface/controllers/taiga-router";
+import * as taigaController from "../taiga-interface/taiga-router";
+import * as git from "../git-interface/routes";
 router.use(function(req, res, next) {
     const project_manager = req.query.project_manager;
     switch (String(project_manager)) {
@@ -10,8 +10,14 @@ router.use(function(req, res, next) {
             next();
             break;
         }
+        case "git": {
+            router.use(git.router);
+            next();
+            break;
+        }
         default: {
-            res.status(400).json({error: "Project manager not specified (specify this in 'project_manager' param, options: taiga, zoho"});
+            next();
+            // res.status(400).json({error: "Project manager not specified (specify this in 'project_manager' param, options: taiga, zoho"});
         }
     }
 });

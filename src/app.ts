@@ -1,18 +1,18 @@
 import express from "express";
-import bodyParser from 'body-parser';
-import  bearerToken from 'express-bearer-token';
+import bodyParser from "body-parser";
+import  bearerToken from "express-bearer-token";
 
 // Controllers (route handlers)
 
 import * as projectManagerMiddleware from "./middleware/project-managers";
+import * as git from "./git-interface/routes";
 // API keys and Passport configuration
 
 
 // Create Express server
 const app = express();
-app.use(bodyParser.json()); //body injector, json data send to req.body
+app.use(bodyParser.json()); // body injector, json data send to req.body
 app.use(bearerToken()); // req.token injector
-
 // Express configuration
 app.set("port", process.env.PORT || 3000);
 
@@ -21,6 +21,7 @@ app.set("port", process.env.PORT || 3000);
  */
 
 app.use("/", projectManagerMiddleware.router);
+
 
 
 

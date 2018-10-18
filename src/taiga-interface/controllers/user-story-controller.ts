@@ -1,38 +1,38 @@
 
-import { Request, Response, NextFunction } from "express";
-import rp from 'request-promise';
-import express from "express";
+import { Request, Response, NextFunction, Router } from "express";
+import rp from "request-promise";
 
 import * as taigaInterface from "../lib";
-import { TaigaUserStory } from '../models/TaigaUserStory';
-import { UserStory } from '../../models/UserStory';
-import * as projectController from './project-controller';
-import { taigaStoryToUserStory } from '../lib';
-export const router = express.Router();
+import { TaigaUserStory } from "../models/TaigaUserStory";
+import { UserStory } from "../../models/UserStory";
+import * as projectController from "./project-controller";
+import { taigaStoryToUserStory } from "../lib";
+import Promise = require("bluebird");
+export const router = Router();
 const base_url: String = "https://api.taiga.io/api/v1";
-var bearerToken: string;
+let bearerToken: string;
 function getTaigaUserStory(id: number | string): Promise<TaigaUserStory> {
     return rp(base_url + "/userstories/" + id).then(
         (body: string) => {
             return JSON.parse(body) as TaigaUserStory;
         }
-    )
+    );
 }
 
 function getUserStory(id: number): Promise<UserStory> {
     let taigaUserStory: TaigaUserStory = new TaigaUserStory();
     let userStory: UserStory = new UserStory();
     return rp(base_url + "/userstories/" + id)
-        //.auth(null, null, true, bearerToken)
+        // .auth(null, null, true, bearerToken)
         .then((body: HTMLBodyElement) => {
             taigaUserStory = JSON.parse(String(body));
-            console.log(taigaUserStory, 'taiga user story from get user story');
+            console.log(taigaUserStory, "taiga user story from get user story");
             userStory = taigaInterface.taigaStoryToUserStory(taigaUserStory);
 
             return userStory;
         })
         .catch(
-            (error:any) => {
+            (error: any) => {
                 return error;
             }
         );
@@ -51,7 +51,7 @@ function getUserStoryWithPoints(id: number, callback?: Function): void {
                             userStory = taigaInterface.taigaStoryToUserStory(taigaUserStory, project);
                             callback(userStory);
                         }
-                    )
+                    );
             }
         )
         ;
@@ -60,7 +60,7 @@ function setUserStory(userStory: UserStory): Promise<UserStory> {
     return getTaigaUserStory(userStory.id)
         .then(
             (taigaUserStory: TaigaUserStory) => {
-                console.log(taigaUserStory, 'version de historia de usuario');
+                console.log(taigaUserStory, "version de historia de usuario");
                 taigaUserStory.assigned_to = userStory.assigned_to;
                 taigaUserStory.assigned_users = [userStory.assigned_to];
                 return rp.patch(
@@ -69,12 +69,12 @@ function setUserStory(userStory: UserStory): Promise<UserStory> {
                         json: taigaUserStory
                     }
                 )
-                    .auth(null, null, true, bearerToken)
+                    //.auth(null, null, true, bearerToken)
                     .then(
                         (taigaUserStory: TaigaUserStory) => {
                             return taigaStoryToUserStory(taigaUserStory);
                         }
-                    )
+                    );
             }).catch(
                 error => {
                     return error.error;
@@ -114,7 +114,7 @@ router.use(
     });
 router.patch("/:id",
     function (req: Request, res: Response) {
-        console.log(req.token, 'bearer token desde patch ');
+        console.log(req.token, "bearer token desde patch ");
         setUserStory(req.body as UserStory)
             .then(
                 (taigaUserStory) => {
@@ -123,15 +123,15 @@ router.patch("/:id",
             .catch(
                 response => {
                     res.status(400).send(response.error);
-                })
+                });
 
     }
 );
 
 router.get("/:id",
     function (req: Request, res: Response) {
-        let userStoryId = req.params.id;
-        console.log(req.query, 'req query from get at user story' )
+        const userStoryId = req.params.id;
+        console.log(req.query, "req query from get at user story" );
         let append_points: boolean = false;
         if ( req.query.append_points && ( Number(req.query.append_points) === 1 ) ) {
             append_points = true;
@@ -142,19 +142,19 @@ router.get("/:id",
                 res.json(userStory);
             });
         } else {
-            console.log('hola desde router get ' + req.params.id)
+            console.log("hola desde router get " + req.params.id);
             getUserStory(userStoryId)
                 .then(
                     (userStory: UserStory) => {
-                        console.log('hola desde router get user story' + userStory)
+                        console.log("hola desde router get user story" + userStory);
                         res.json(userStory);
                     })
                 .catch(
                     response => {
-                        console.log('hola desde router get user story catch')
+                        console.log("hola desde router get user story catch");
 
                         res.status(400).send(response.error);
-                    })
+                    });
         }
     }
 );
