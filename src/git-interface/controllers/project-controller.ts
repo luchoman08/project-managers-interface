@@ -13,7 +13,7 @@ export async function getProject(g: GraphQLClient, id: string| number ): Promise
     return gitRepoToProject(<any>repo);
 }
 
-async function getProjectsByMemberUsername(octo: Octokit, username: string): Promise<Project[]> {
+export async function getProjectsByMemberUsername(octo: Octokit, username: string): Promise<Project[]> {
     try {
         const {data: gitRepos} =  await octo.repos.listForUser({username:  username});
         const projects: Project[] = gitRepos.map(  (repo: ReposListPublicResponseItem ) =>
@@ -27,9 +27,9 @@ async function getProjectsByMemberUsername(octo: Octokit, username: string): Pro
 router.use (
     async function (req: Request, res: Response, next)  {
     const member = req.query.member;
-    const slug = req.query.slug;    
+    const slug = req.query.slug;
     if ( member ) {
-       
+
         const projects = await getProjectsByMemberUsername(<Octokit>req.octokit, member);
         res.json(projects);
     }

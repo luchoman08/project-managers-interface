@@ -37,6 +37,20 @@ export const IssueQueries = {
     `
 };
 export const MilestoneQueries = {
+    listForProjectWithRepoInfo: `
+    query($owner:String!, $name:String!) {
+        repository(owner: $owner, name: $name) {
+            milestones(first: 100) {
+                nodes {
+                    title,
+                    description,
+                    id,
+                    dueOn
+                }
+            }
+       }
+    }
+    `,
     listForProject : `
     query($projectId:ID!) {
         node(id:$projectId) {
