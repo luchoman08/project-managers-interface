@@ -14,6 +14,7 @@ import {
 } from "../models";
 
 import { Punctuation } from "../models/Punctuations";
+import { TaigaProject } from './models/TaigaProject';
 
 export function taigaProjectToProject(
     taigaProject: TaigaProject): Project {
@@ -30,8 +31,8 @@ export function taigaProjectToProject(
 }
 
 export function taigaProjectsToProjects(
-    taigaMilestones: TaigaProject[]): Project[] {
-    return taigaMilestones.map(taigaProjectToProject);
+    taigaProjects: TaigaProject[]): Project[] {
+    return taigaProjects.map(taigaProjectToProject);
 }
 
 export function taigaMembershipToDeveloper(

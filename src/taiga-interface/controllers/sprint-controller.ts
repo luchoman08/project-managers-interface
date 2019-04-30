@@ -21,64 +21,39 @@ async function getSprint(id: number, projectId: number|string): Promise<Sprint> 
     });
 }
 
-function getProjectSprints(project_id: String, callback: Function) {
-    let taigaMilestones: TaigaMilestone[] = new Array<TaigaMilestone>();
-    let sprints: Sprint[] = new Array<Sprint>();
-    request({
+async function getProjectSprints(project_id: String): Promise<Sprint[]> {
+    const response = await rp({
         url: base_url + "/milestones",
         qs: { "project": project_id }
-    },
-        function (error, response, body) {
-            taigaMilestones = JSON.parse(body);
-            sprints = taigaInterface.taigaMilestonesToSprints(taigaMilestones);
-            callback(sprints);
-        });
+    });
+    console.log(response, 'taiga reponse at get project milestone');
+    const taigaMilestones: TaigaMilestone[] = JSON.parse(response);
+     const sprints = taigaInterface.taigaMilestonesToSprints(taigaMilestones);
+     return sprints;
 }
 
-function getProjectSprintsWithUserStoryPoints(project_id: String, callback: Function) {
-    let taigaMilestones: TaigaMilestone[] = new Array<TaigaMilestone>();
-    let sprints: Sprint[] = new Array<Sprint>();
-    rp({
+async function getProjectSprintsWithUserStoryPoints(project_id: String): Promise<any> {
+    const response = await rp({
         url: base_url + "/milestones",
         qs: { "project": project_id }
-    }).then(
-        (body: HTMLBodyElement) => {
-            taigaMilestones = JSON.parse(String(body));
-            projectController.getTaigaProject(<string>project_id)
-            .then(
-                (project: TaigaProject) => {
-                    /* taiga milestones to sprint with project can extract user story punctuations */
-                    sprints = taigaInterface.taigaMilestonesToSprints(taigaMilestones, project);
-                    callback(sprints);
-                }
-            )
-            .catch(
-                (error: any) => {
-                    callback( error);
-                 }
-            );
-
-        }).catch(
-            (error: any) => {
-               callback( error);
-            });
+    });
+    const taigaMilestones = JSON.parse(response);
+    const taigaProject = await projectController.getTaigaProject(<string>project_id);
+   const sprints = taigaInterface.taigaMilestonesToSprints(taigaMilestones, taigaProject);
+    return sprints;
 }
 router.use(
-    function (req: Request, res: Response, next) {
+    async function (req: Request, res: Response, next) {
         const projectid = req.query.project;
         const append_points = req.query.append_points;
         console.log(append_points, " append points from get project sprints");
         if ( projectid ) {
             if ( append_points ) {
-                getProjectSprintsWithUserStoryPoints(projectid,
-                function(sprints: Sprint[]) {
-                    res.send(sprints);
-                });
+                const sprints = await getProjectSprintsWithUserStoryPoints(projectid);
+                res.json(sprints);
             } else {
-            getProjectSprints(projectid,
-                function (sprints: Sprint[]) {
-                    res.send(sprints);
-                });
+            const sprints = await getProjectSprints(projectid);
+            res.json(sprints);
             }
         }
         else {

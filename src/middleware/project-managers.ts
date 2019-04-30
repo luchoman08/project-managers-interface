@@ -4,15 +4,15 @@ import * as taigaController from "../taiga-interface/taiga-router";
 import * as git from "../git-interface/routes";
 
 const  ProjectManagers = {
-    TAIGA: {name: "tagia", abreviation: "t"},
+    TAIGA: {name: "taiga", abreviation: "t"},
     GIT: {name: "git", abreviation: "g"},
 };
 router.use(function(req, res, next) {
+    
     if (req.query.pm) {
         const project_manager = req.query.pm;
         switch (String(project_manager)) {
             case ProjectManagers.GIT.abreviation: {
-                console.log("kha");
                 router.use(git.nativeRouter);
             }
         }

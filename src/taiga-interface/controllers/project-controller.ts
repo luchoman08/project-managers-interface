@@ -15,7 +15,7 @@ const base_url: String = "https://api.taiga.io/api/v1";
 
 export async function getTaigaProject (id: number | string): Promise<TaigaProject> {
     const response = await rp(base_url + "/projects/" + id);
-    return response;
+    return JSON.parse(response);
     }
 export async function getProject (id: number | string): Promise<Project> {
     let taigaProject: TaigaProject = new TaigaProject();
@@ -39,11 +39,14 @@ async function  getProjectBySlug(slug: string): Promise<Project> {
 }
 
 async function getProjectsByMemberId(member_id: String): Promise<Project[]> {
-    const taigaProjects = await  rp({
+    const response = await  rp({
             url: base_url + "/projects",
             qs: {"member": member_id}
         });
+    const taigaProjects = JSON.parse(response);
+    console.log(taigaProjects, 'taiga project in get projects by member id');
     const projects  = taigaInterface.taigaProjectsToProjects(taigaProjects);
+    console.log(projects, 'taiga projects converted');
     return projects;
     }
 router.use (
@@ -52,8 +55,8 @@ router.use (
     const member = req.query.member;
     const slug = req.query.slug;
     if (member) {
-        const project = await getProjectsByMemberId (member);
-        return project;
+        const projects = await getProjectsByMemberId (member);
+        res.json(projects);
     }
     else if (slug) {
         console.log(slug);
