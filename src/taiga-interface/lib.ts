@@ -14,17 +14,16 @@ import {
 } from "../models";
 
 import { Punctuation } from "../models/Punctuations";
-import { TaigaProject } from './models/TaigaProject';
 
 export function taigaProjectToProject(
     taigaProject: TaigaProject): Project {
-    console.log(taigaProject.members, 'taiga project ');
+    console.log(taigaProject.members, "taiga project ");
     const project: Project = new Project();
     project.id = taigaProject.id;
     project.description = taigaProject.description;
-    project.sprints = taigaProject.milestones? taigaMilestonesToSprints(taigaProject.milestones) : new Array<Sprint>();
-    project.developers = taigaProject.members? taigaMembershipsToDevelopers(taigaProject.members): new Array<Developer>();
-    project.points = taigaProject.points? taigaProject.points: new Array<Point>();
+    project.sprints = taigaProject.milestones ? taigaMilestonesToSprints(taigaProject.milestones) : new Array<Sprint>();
+    project.developers = taigaProject.members ? taigaMembershipsToDevelopers(taigaProject.members) : new Array<Developer>();
+    project.points = taigaProject.points ? taigaProject.points : new Array<Point>();
     project.name = taigaProject.name;
     project.created_date = taigaProject.created_date;
     return project;
@@ -91,18 +90,18 @@ export function taigaMilestonesToSprints(
 }
 
 export function extractStoryPunctuationsFromProject(taigaProject: TaigaProject, taigaUserStory: TaigaUserStory): Punctuation[] {
-    let punctuations: Punctuation[] = new Array<Punctuation>();
-    for (let id_role of Object.keys(taigaUserStory.points)) {
-        let role_name = taigaProject.roles.filter(role => role.id === Number(id_role))[0].name;
-        let point_value = taigaProject.points.filter(point => point.id === taigaUserStory.points[id_role])[0].value;
+    const punctuations: Punctuation[] = new Array<Punctuation>();
+    for (const id_role of Object.keys(taigaUserStory.points)) {
+        const role_name = taigaProject.roles.filter(role => role.id === Number(id_role))[0].name;
+        const point_value = taigaProject.points.filter(point => point.id === taigaUserStory.points[id_role])[0].value;
         punctuations.push (new Punctuation(id_role, role_name, point_value));
     }
     return punctuations;
 }
 export function extractPunctuationsFromProject(taigaProject: TaigaProject): Punctuation[] {
-    let punctuations: Punctuation[] = new Array<Punctuation>();
-    let point_value = null; // default point value is null
-    for (let role of taigaProject.roles.slice(0,4)) {
+    const punctuations: Punctuation[] = new Array<Punctuation>();
+    const point_value: number = undefined; // default point value is undefined
+    for (const role of taigaProject.roles.slice(0, 4)) {
         punctuations.push (new Punctuation(role.id, role.name, point_value));
     }
     return punctuations;

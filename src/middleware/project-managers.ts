@@ -8,7 +8,7 @@ const  ProjectManagers = {
     GIT: {name: "git", abreviation: "g"},
 };
 router.use(function(req, res, next) {
-    
+
     if (req.query.pm) {
         const project_manager = req.query.pm;
         switch (String(project_manager)) {

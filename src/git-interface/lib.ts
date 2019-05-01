@@ -5,7 +5,7 @@ import { UserStory, Developer, Project, Sprint } from "../models";
 export function gitIssueToUserStory(issue: IssuesListForRepoResponseItem ): UserStory {
     console.log(issue.title);
     const userStory = new UserStory();
-    userStory.assigned_to = issue.assignee ? issue.assignee.id : null;
+    userStory.assigned_to = issue.assignee ? issue.assignee.id : undefined;
     userStory.subject = issue.body;
     return userStory;
 }

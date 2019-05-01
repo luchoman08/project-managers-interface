@@ -69,7 +69,7 @@ function setUserStory(userStory: UserStory): Promise<UserStory> {
                         json: taigaUserStory
                     }
                 )
-                    //.auth(null, null, true, bearerToken)
+                    // .auth(null, null, true, bearerToken)
                     .then(
                         (taigaUserStory: TaigaUserStory) => {
                             return taigaStoryToUserStory(taigaUserStory);

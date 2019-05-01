@@ -44,9 +44,9 @@ async function getProjectsByMemberId(member_id: String): Promise<Project[]> {
             qs: {"member": member_id}
         });
     const taigaProjects = JSON.parse(response);
-    console.log(taigaProjects, 'taiga project in get projects by member id');
+    console.log(taigaProjects, "taiga project in get projects by member id");
     const projects  = taigaInterface.taigaProjectsToProjects(taigaProjects);
-    console.log(projects, 'taiga projects converted');
+    console.log(projects, "taiga projects converted");
     return projects;
     }
 router.use (

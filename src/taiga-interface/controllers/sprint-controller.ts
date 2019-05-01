@@ -26,7 +26,7 @@ async function getProjectSprints(project_id: String): Promise<Sprint[]> {
         url: base_url + "/milestones",
         qs: { "project": project_id }
     });
-    console.log(response, 'taiga reponse at get project milestone');
+    console.log(response, "taiga reponse at get project milestone");
     const taigaMilestones: TaigaMilestone[] = JSON.parse(response);
      const sprints = taigaInterface.taigaMilestonesToSprints(taigaMilestones);
      return sprints;

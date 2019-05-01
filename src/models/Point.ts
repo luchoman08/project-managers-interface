@@ -4,6 +4,6 @@ export class Point {
     name: number;
     order: number;
     public static sortFunction(point1: Point, point2: Point) {
-        return point1.order <= point2.order? -1: 1;
+        return point1.order <= point2.order ? -1 : 1;
     }
 }
