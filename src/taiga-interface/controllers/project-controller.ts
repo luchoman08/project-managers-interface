@@ -8,6 +8,7 @@ import  { TaigaProject }  from "../models/";
 import { Project } from "../../models/";
 
 import express from "express";
+import { Error } from "mongoose";
 export const router = express.Router();
 
 const base_url: String = "https://api.taiga.io/api/v1";
@@ -38,11 +39,18 @@ async function  getProjectBySlug(slug: string): Promise<Project> {
     return project;
 }
 
-async function getProjectsByMemberId(member_id: String): Promise<Project[]> {
-    const response = await  rp({
+async function getProjectsByMemberId(member_id: String): Promise<Project[]|Error> {
+    let response;
+    try {
+        response = await  rp({
             url: base_url + "/projects",
             qs: {"member": member_id}
         });
+    } catch (e) {
+        console.log(e);
+        return e;
+    }
+    console.log(response, response);
     const taigaProjects = JSON.parse(response);
     console.log(taigaProjects, "taiga project in get projects by member id");
     const projects  = taigaInterface.taigaProjectsToProjects(taigaProjects);
