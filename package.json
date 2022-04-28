@@ -28,7 +28,7 @@
     "@octokit/rest": "^16.19.0",
     "@types/nodegit": "^0.24.4",
     "@types/request-promise": "^4.1.43",
-    "async": "^2.6.0",
+    "async": "^2.6.4",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.1",
